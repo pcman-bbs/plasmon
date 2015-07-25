@@ -2,3 +2,4 @@ node_modules
 build
 pcman.js
 script.js
+*.log

@@ -1,34 +1,39 @@
 {
-  "name": "plasmon",
-  "version": "0.0.1",
-  "description": "PCMan BBS Client on Electron",
-  "main": "main.js",
-  "scripts": {
-		"start": "electron .",
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/pcman-bbs/plasmon.git"
-  },
-  "keywords": [
-    "bbs"
-  ],
-  "author": "kidwm",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/pcman-bbs/plasmon/issues"
-  },
-  "dependencies": {
-    "iconv-lite": "~0.4.11"
-  },
-  "devDependencies": {
-    "electron-prebuilt": "^0.30.1",
-    "grunt": "~0.4.5",
-    "grunt-browserify": "~3.8.0",
-    "grunt-contrib-copy": "~0.8.0",
-    "grunt-electron": "~2.0.0",
-    "load-grunt-tasks": "~3.2.0",
-    "strictify": "~0.2.0"
-  }
+	"name": "plasmon",
+	"version": "0.0.1",
+	"description": "PCMan BBS Client on Electron",
+	"main": "main.js",
+	"scripts": {
+		"start": "grunt browserify && electron main.js",
+		"livereload": "electron main.js --livereload",
+		"server": "grunt",
+		"build": "grunt build",
+		"test": "echo \"Error: no test specified\" && exit 1"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/pcman-bbs/plasmon.git"
+	},
+	"keywords": [
+		"bbs"
+	],
+	"author": "kidwm",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/pcman-bbs/plasmon/issues"
+	},
+	"dependencies": {
+		"iconv-lite": "~0.4.11"
+	},
+	"devDependencies": {
+		"electron-prebuilt": "^0.30.1",
+		"grunt": "~0.4.5",
+		"grunt-cli": "~0.1.13",
+		"grunt-browserify": "~3.8.0",
+		"grunt-browser-sync": "~2.1.2",
+		"grunt-contrib-copy": "~0.8.0",
+		"grunt-electron": "~2.0.0",
+		"load-grunt-tasks": "~3.2.0",
+		"strictify": "~0.2.0"
+	}
 }

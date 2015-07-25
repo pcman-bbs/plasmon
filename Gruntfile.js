@@ -4,6 +4,22 @@ module.exports = function(grunt) {
 	const electron_version = '0.30.1';
 	const is_development = process.argv[2] !== 'build';
 	grunt.initConfig({
+
+		browserSync: {
+			dev: {
+				bsFiles: {
+					src : [
+						'index.html',
+						'script.js'
+					]
+				},
+				options: {
+					watchTask: true,
+					open: false,
+					server: './'
+				}
+			}
+		},
 		browserify: {
 			options: {
 				browserifyOptions: {
@@ -55,6 +71,6 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	grunt.registerTask('default', ['browserify']);
+	grunt.registerTask('default', ['browserSync', 'browserify']);
 	grunt.registerTask('build', ['browserify', 'copy', 'electron']);
 }

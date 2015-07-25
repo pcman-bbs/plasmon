@@ -25,34 +25,41 @@ var mainWindow = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
-  if (process.platform != 'darwin')
-    app.quit();
+	if (process.platform != 'darwin')
+		app.quit();
 });
 
 // This method will be called when atom-shell has done everything
 // initialization and ready for creating browser windows.
 app.on('ready', function() {
-  // Create the browser window.
-  mainWindow = new BrowserWindow({
-	'center': true,
-	'dark-theme': true,
-    'web-preferences': {
-		'web-security': false
-	}
-  });
+	// Create the browser window.
+	mainWindow = new BrowserWindow({
+		'center': true,
+		'dark-theme': true,
+		'web-preferences': {
+			'web-security': false
+		}
+	});
 
 	mainWindow.maximize();
 
-  // and load the index.html of the app.
-  	mainWindow.loadUrl('file://' + __dirname + '/index.html');
+	// It is for livereload.
+	// If you want to development with livereload, 
+	// run `npm run server` and then `npm run livereload`.
+	if (process.argv.indexOf('--livereload') >= 0) {
+		mainWindow.loadUrl('http://localhost:3000/');
+	} else {
+		// and load the index.html of the app.
+		mainWindow.loadUrl('file://' + __dirname + '/index.html');
+	}
 
-  // Emitted when the window is closed.
-  mainWindow.on('closed', function() {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
-    mainWindow = null;
-  });
+	// Emitted when the window is closed.
+	mainWindow.on('closed', function() {
+		// Dereference the window object, usually you would store windows
+		// in an array if your app supports multi windows, this is the time
+		// when you should delete the corresponding element.
+		mainWindow = null;
+	});
 
 	telnet.on('data', function(data) {
 		mainWindow.webContents.send('data', data);

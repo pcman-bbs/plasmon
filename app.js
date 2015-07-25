@@ -1,6 +1,6 @@
 var ipc = require('ipc');
 var iconv = require('iconv-lite');
-var PCMan =  require('./pcman');
+var PCMan =  require('pcman');
 var pcman = null;
 
 class App {

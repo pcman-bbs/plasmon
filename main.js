@@ -34,12 +34,14 @@ app.on('window-all-closed', function() {
 app.on('ready', function() {
   // Create the browser window.
   mainWindow = new BrowserWindow({
-    'min-width': 720,
-    'min-height': 640,
+	'center': true,
+	'dark-theme': true,
     'web-preferences': {
 		'web-security': false
 	}
   });
+
+	mainWindow.maximize();
 
   // and load the index.html of the app.
   	mainWindow.loadUrl('file://' + __dirname + '/index.html');

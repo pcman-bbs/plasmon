@@ -3,4 +3,5 @@ build
 pcman.js
 script.js
 *.log
-./main.js
+main.js
+!src/

@@ -5,7 +5,7 @@
 	"main": "main.js",
 	"scripts": {
 		"start": "grunt babel && grunt browserify && electron main.js",
-		"livereload": "electron main.js --livereload",
+		"livereload": "grunt babel & electron main.js --livereload",
 		"server": "grunt",
 		"build": "grunt build",
 		"test": "echo \"Error: no test specified\" && exit 1"

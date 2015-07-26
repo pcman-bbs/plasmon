@@ -14,7 +14,6 @@ module.exports = function(grunt) {
 					]
 				},
 				options: {
-					watchTask: true,
 					open: false,
 					server: './'
 				}
@@ -28,7 +27,6 @@ module.exports = function(grunt) {
 				},
 				watch: is_development,
 				transform: [require("strictify")],
-				keepAlive: is_development
 			},
 			app: {
 				src: 'app.js',
@@ -71,6 +69,6 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	grunt.registerTask('default', ['browserSync', 'browserify']);
+	grunt.registerTask('default', ['browserify', 'browserSync']);
 	grunt.registerTask('build', ['browserify', 'copy', 'electron']);
 }

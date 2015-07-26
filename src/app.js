@@ -1,10 +1,11 @@
-var ipc = require('ipc');
-var shell = require('shell');
-var iconv = require('iconv-lite');
-var PCMan =  require('pcman');
-var pcman = null;
-var u2b_table = require('./u2b.json');
-var b2u_table = require('./b2u.json');
+import ipc from 'ipc';
+import shell from 'shell';
+import iconv from 'iconv-lite';
+import PCMan from 'pcman';
+import u2b_table from './u2b.json';
+import b2u_table from './b2u.json';
+
+let pcman = null;
 
 class App {
 	constructor(url, charset) {
@@ -19,14 +20,14 @@ class App {
 			input: this.input_proxy,
 			opener: shell.openExternal,
 			sender: ipc.send.bind(null, 'send'),
-			encoder: function(str) {
-				var data = '';
-				for (var i = 0; i < str.length; ++i) {
+			encoder(str) {
+				let data = '';
+				for (let i = 0; i < str.length; ++i) {
 					if (str.charAt(i) < '\x80') {
 						data += str.charAt(i);
 						continue;
 					}
-					var charCodeStr = str.charCodeAt(i).toString(16).toUpperCase();
+					let charCodeStr = str.charCodeAt(i).toString(16).toUpperCase();
 					charCodeStr = 'x' + ('000' + charCodeStr).substr(-4);
 					if (u2b_table[charCodeStr])
 						data += u2b_table[charCodeStr];
@@ -35,15 +36,15 @@ class App {
 				}
 				return data;
 			},
-			decoder: function(str) {
-				var data = '';
-				for (var i = 0; i < str.length; ++i) {
-					if (str.charAt(i) < '\x80' || i == str.length-1) {
+			decoder(str) {
+				let data = '';
+				for (let i = 0; i < str.length; ++i) {
+					if (str.charAt(i) < '\x80' || i == str.length - 1) {
 						data += str.charAt(i);
 						continue;
 					}
-					var b5index = 'x' + str.charCodeAt(i).toString(16).toUpperCase() +
-						str.charCodeAt(i+1).toString(16).toUpperCase();
+					let b5index = 'x' + str.charCodeAt(i).toString(16).toUpperCase() +
+						str.charCodeAt(i + 1).toString(16).toUpperCase();
 					if (b2u_table[b5index]) {
 						data += b2u_table[b5index];
 						++i;
@@ -90,8 +91,8 @@ function eventHandler(event) {
 	}
 }
 
-document.addEventListener("DOMContentLoaded", function(event) {
-	var app = new App('ptt.cc');
+document.addEventListener("DOMContentLoaded", (event) => {
+	let app = new App('ptt.cc');
 	window.onload = app.setup.bind(app);
 	window.onunload = app.finalize.bind(app);
 	window.onresize = app.resize.bind(app);

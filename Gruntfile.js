@@ -5,6 +5,13 @@ module.exports = function(grunt) {
 	const is_development = process.argv[2] !== 'build';
 	grunt.initConfig({
 
+		babel: {
+			dist: {
+				files: {
+					'main.js': './src/main.js'
+				}
+			}
+		},
 		browserSync: {
 			dev: {
 				bsFiles: {
@@ -26,10 +33,10 @@ module.exports = function(grunt) {
 					debug: is_development
 				},
 				watch: is_development,
-				transform: [require("strictify")],
+				transform: [require("babelify")],
 			},
 			app: {
-				src: 'app.js',
+				src: './src/app.js',
 				dest:'script.js'
 			}
 		},
@@ -69,6 +76,6 @@ module.exports = function(grunt) {
 			}
 		}
 	});
-	grunt.registerTask('default', ['browserify', 'browserSync']);
-	grunt.registerTask('build', ['browserify', 'copy', 'electron']);
+	grunt.registerTask('default', ['babel', 'browserify', 'browserSync']);
+	grunt.registerTask('build', ['babel', 'browserify', 'copy', 'electron']);
 }

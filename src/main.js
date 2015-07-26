@@ -1,21 +1,21 @@
-var ipc = require('ipc');
-var net = require('net');
+import ipc from 'ipc';
+import net from 'net';
 
-var telnet = new net.Socket();
-var telnetConn = false;
-var currentData = null;
+let telnet = new net.Socket();
+let telnetConn = false;
+let currentData = null;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
-var mainWindow = null;
+let mainWindow = null;
 
-ipc.on('send', function(event, arg) {
+ipc.on('send', (event, arg) => {
 	telnet.write(arg, 'binary');
 });
 
-ipc.on('connect', function(event, site){
+ipc.on('connect', (event, site) => {
 	if (!telnetConn) {
-		telnet.connect(23, site, function() {
+		telnet.connect(23, site, () => {
 			console.log('TELNET START');
 			telnetConn = true;
 		});
@@ -26,21 +26,22 @@ ipc.on('connect', function(event, site){
 	}
 });
 
-var app = require('app');  // Module to control application life.
-var BrowserWindow = require('browser-window');  // Module to create native browser window.
+import app from 'app';  // Module to control application life.
+import BrowserWindow from 'browser-window';  // Module to create native browser window.
 
 // Report crashes to our server.
 //require('crash-reporter').start();
 
 // Quit when all windows are closed.
-app.on('window-all-closed', function() {
-	if (process.platform != 'darwin')
+app.on('window-all-closed', () => {
+	if (process.platform != 'darwin') {
 		app.quit();
+	}
 });
 
 // This method will be called when atom-shell has done everything
 // initialization and ready for creating browser windows.
-app.on('ready', function() {
+app.on('ready', () => {
 	// Create the browser window.
 	mainWindow = new BrowserWindow({
 		'center': true,
@@ -53,7 +54,7 @@ app.on('ready', function() {
 	mainWindow.maximize();
 
 	// It is for livereload.
-	// If you want to development with livereload, 
+	// If you want to development with livereload,
 	// run `npm run server` and then `npm run livereload`.
 	if (process.argv.indexOf('--livereload') >= 0) {
 		mainWindow.loadUrl('http://localhost:3000/');
@@ -63,14 +64,14 @@ app.on('ready', function() {
 	}
 
 	// Emitted when the window is closed.
-	mainWindow.on('closed', function() {
+	mainWindow.on('closed', () => {
 		// Dereference the window object, usually you would store windows
 		// in an array if your app supports multi windows, this is the time
 		// when you should delete the corresponding element.
 		mainWindow = null;
 	});
 
-	telnet.on('data', function(data) {
+	telnet.on('data', (data) => {
 		currentData = data;
 		mainWindow.webContents.send('data', data);
 	});

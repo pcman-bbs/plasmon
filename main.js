@@ -2,15 +2,28 @@ var ipc = require('ipc');
 var net = require('net');
 
 var telnet = new net.Socket();
+var telnetConn = false;
+var currentData = null;
+
+// Keep a global reference of the window object, if you don't, the window will
+// be closed automatically when the javascript object is GCed.
+var mainWindow = null;
 
 ipc.on('send', function(event, arg) {
 	telnet.write(arg, 'binary');
 });
 
 ipc.on('connect', function(event, site){
-	telnet.connect(23, site, function() {
-		console.log('TELNET START');
-	});
+	if (!telnetConn) {
+		telnet.connect(23, site, function() {
+			console.log('TELNET START');
+			telnetConn = true;
+		});
+	} else {
+		if (mainWindow && currentData) {
+			mainWindow.webContents.send('data', currentData);
+		}
+	}
 });
 
 var app = require('app');  // Module to control application life.
@@ -18,10 +31,6 @@ var BrowserWindow = require('browser-window');  // Module to create native brows
 
 // Report crashes to our server.
 //require('crash-reporter').start();
-
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the javascript object is GCed.
-var mainWindow = null;
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function() {
@@ -62,6 +71,7 @@ app.on('ready', function() {
 	});
 
 	telnet.on('data', function(data) {
+		currentData = data;
 		mainWindow.webContents.send('data', data);
 	});
 	//mainWindow.toggleDevTools();

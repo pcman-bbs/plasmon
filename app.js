@@ -3,6 +3,8 @@ var shell = require('shell');
 var iconv = require('iconv-lite');
 var PCMan =  require('pcman');
 var pcman = null;
+var u2b_table = require('./u2b.json');
+var b2u_table = require('./b2u.json');
 
 class App {
 	constructor(url, charset) {
@@ -17,11 +19,39 @@ class App {
 			input: this.input_proxy,
 			opener: shell.openExternal,
 			sender: ipc.send.bind(null, 'send'),
-			encoder: function(unicode_str) {
-				return iconv.encode(unicode_str, 'big5');
+			encoder: function(str) {
+				var data = '';
+				for (var i = 0; i < str.length; ++i) {
+					if (str.charAt(i) < '\x80') {
+						data += str.charAt(i);
+						continue;
+					}
+					var charCodeStr = str.charCodeAt(i).toString(16).toUpperCase();
+					charCodeStr = 'x' + ('000' + charCodeStr).substr(-4);
+					if (u2b_table[charCodeStr])
+						data += u2b_table[charCodeStr];
+					else // Not a big5 char
+						data += '\xFF\xFD';
+				}
+				return data;
 			},
-			decoder: function(telnet_str) {
-				return iconv.decode(telnet_str, 'big5');
+			decoder: function(str) {
+				var data = '';
+				for (var i = 0; i < str.length; ++i) {
+					if (str.charAt(i) < '\x80' || i == str.length-1) {
+						data += str.charAt(i);
+						continue;
+					}
+					var b5index = 'x' + str.charCodeAt(i).toString(16).toUpperCase() +
+						str.charCodeAt(i+1).toString(16).toUpperCase();
+					if (b2u_table[b5index]) {
+						data += b2u_table[b5index];
+						++i;
+					} else { // Not a big5 char
+						data += str.charAt(i);
+					}
+				}
+				return data;
 			}
 		});
 		ipc.send('connect', this.url);

@@ -4,7 +4,7 @@ var net = require('net');
 var telnet = new net.Socket();
 
 ipc.on('send', function(event, arg) {
-	telnet.write(arg);
+	telnet.write(arg, 'binary');
 });
 
 ipc.on('connect', function(event, site){

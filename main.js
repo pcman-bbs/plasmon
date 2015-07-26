@@ -43,6 +43,10 @@ app.on('ready', function() {
 
 	mainWindow.maximize();
 
+	if (process.env.DEBUG) {
+		mainWindow.openDevTools({ detach: true });
+	}
+
   // and load the index.html of the app.
   	mainWindow.loadUrl('file://' + __dirname + '/index.html');
 

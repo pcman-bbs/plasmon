@@ -53,7 +53,7 @@ app.on('ready', function() {
 	mainWindow.maximize();
 
 	// It is for livereload.
-	// If you want to development with livereload, 
+	// If you want to development with livereload,
 	// run `npm run server` and then `npm run livereload`.
 	if (process.argv.indexOf('--livereload') >= 0) {
 		mainWindow.loadUrl('http://localhost:3000/');

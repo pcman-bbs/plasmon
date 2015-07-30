@@ -26,11 +26,11 @@
 		"iconv-lite": "~0.4.11"
 	},
 	"devDependencies": {
-		"electron-prebuilt": "^0.30.1",
+		"electron-prebuilt": "^0.30.2",
 		"grunt": "~0.4.5",
 		"grunt-cli": "~0.1.13",
 		"grunt-browserify": "~3.8.0",
-		"grunt-browser-sync": "~2.1.2",
+		"grunt-browser-sync": "~2.1.3",
 		"grunt-contrib-copy": "~0.8.0",
 		"grunt-electron": "~2.0.0",
 		"load-grunt-tasks": "~3.2.0",

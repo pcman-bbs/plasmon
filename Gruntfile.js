@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt);
 	const project_name = 'Plasmon'
-	const electron_version = '0.30.1';
+	const electron_version = '0.30.2';
 	const is_development = process.argv[2] !== 'build';
 	grunt.initConfig({
 
@@ -26,7 +26,7 @@ module.exports = function(grunt) {
 					debug: is_development
 				},
 				watch: is_development,
-				transform: [require("strictify")],
+				transform: [require("strictify")]
 			},
 			app: {
 				src: 'app.js',

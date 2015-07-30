@@ -1,5 +1,8 @@
 var ipc = require('ipc');
 var shell = require('shell');
+var remote = require('remote');
+var Menu = remote.require('menu');
+var clipboard = require('clipboard');
 var iconv = require('iconv-lite');
 var PCMan =  require('pcman');
 var pcman = null;
@@ -102,4 +105,37 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	document.body.onmouseup = eventHandler;
 	document.body.onclick = eventHandler;
 	document.body.ondblclick = eventHandler;
+	window.addEventListener('contextmenu', function (e) {
+		e.preventDefault();
+		var isSel = pcman.view.selection.hasSelection();
+		var menu = Menu.buildFromTemplate([
+			{
+				label: '複製',
+				enabled: isSel,
+				click: function() {
+					clipboard.writeText(pcman.view.selection.getText());
+				}
+			},
+			{
+				label: '貼上',
+				click: function() {
+					pcman.conn.convSend(clipboard.readText());
+				}
+			},
+			{
+				label: '全選',
+				click: function() {
+					pcman.selAll();
+				}
+			},
+			{
+				label: '搜尋',
+				enabled: isSel,
+				click: function() {
+					shell.openExternal('http://www.google.com/search?q=' + pcman.view.selection.getText());
+				}
+			}
+		]);
+		menu.popup(remote.getCurrentWindow());
+	}, false);
 });

@@ -4,7 +4,6 @@ module.exports = function(grunt) {
 	const electron_version = '0.30.2';
 	const is_development = process.argv[2] !== 'build';
 	grunt.initConfig({
-
 		browserSync: {
 			dev: {
 				bsFiles: {

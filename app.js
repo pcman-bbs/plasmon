@@ -20,7 +20,18 @@ class App {
 		pcman = new PCMan({
 			view: this.canvas,
 			input: this.input_proxy,
-			opener: shell.openExternal,
+			opener: function(url) {
+				fetch(url, {method: 'HEAD'}).then(function(response) {
+					if (/^image\/.+/.test(response.headers.get('Content-Type'))) { //  open image viewer
+						let viewer = document.getElementById("viewer");
+						viewer.innerHTML = `<img src="${url}" />`;
+						viewer.show();
+					} else
+						shell.openExternal(url);
+				}, function() {
+					shell.openExternal(url); // handle fetch error
+				});
+			},
 			sender: ipc.send.bind(null, 'send'),
 			encoder: function(str) {
 				var data = '';
@@ -105,6 +116,13 @@ document.addEventListener("DOMContentLoaded", function(event) {
 	document.body.onmouseup = eventHandler;
 	document.body.onclick = eventHandler;
 	document.body.ondblclick = eventHandler;
+	let viewer = document.getElementById("viewer");
+	viewer.onclick = function() {
+		viewer.close();
+	};
+	viewer.onclose = function() {
+		viewer.innerHTML = '';
+	};
 	window.addEventListener('contextmenu', function (e) {
 		e.preventDefault();
 		var isSel = pcman.view.selection.hasSelection();

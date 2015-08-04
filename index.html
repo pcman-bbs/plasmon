@@ -22,10 +22,21 @@
 				line-height: 2em;
 				font-size: large;
 			}
+			dialog {
+				top: 0;
+				max-height: 100vh;
+				border: none;
+				box-shadow: 0 0 10px #000;
+			}
+			dialog img {
+				display: block;
+				max-height: calc(100vh - 2em);
+			}
 		</style>
 	</head>
 	<body>
 		<textarea id="input_proxy" rows="1" cols="10"></textarea>
 		<canvas id="canvas"></canvas>
+		<dialog id="viewer"></dialog>
 	</body>
 </html>

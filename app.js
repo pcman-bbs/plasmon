@@ -21,6 +21,9 @@ class App {
 			view: this.canvas,
 			input: this.input_proxy,
 			opener: function(url) {
+				if (url.match(/^http:\/\/imgur.com\//)) {
+					url = url.replace(/http:\/\/imgur.com\/([A-Za-z0-9]{7})/, "http:\/\/i.imgur.com\/$1.png");
+				}
 				fetch(url, {method: 'HEAD'}).then(function(response) {
 					if (/^image\/.+/.test(response.headers.get('Content-Type'))) { //  open image viewer
 						let viewer = document.getElementById("viewer");

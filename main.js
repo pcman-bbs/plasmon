@@ -1,24 +1,42 @@
 var ipc = require('ipc');
 var net = require('net');
 
-var telnet = new net.Socket();
+var telnet;
 var telnetConn = false;
 var currentData = null;
+var currentSite = null;
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the javascript object is GCed.
 var mainWindow = null;
 
+function telnetConnect(site) {
+	currentSite = site;
+	telnetConn = true;
+	telnet = new net.Socket();
+	telnet.connect(23, site, function() {
+		console.log('TELNET START');
+	});
+
+	telnet.on('data', function(data) {
+		currentData = data;
+		mainWindow.webContents.send('data', data);
+	});
+
+	telnet.on('end', function() {
+		console.log('TELNET END');
+		telnetConn = false;
+	});
+}
+
 ipc.on('send', function(event, arg) {
-	telnet.write(arg, 'binary');
+	if (telnetConn) telnet.write(arg, 'binary');
+	else telnetConnect(currentSite);
 });
 
 ipc.on('connect', function(event, site){
 	if (!telnetConn) {
-		telnet.connect(23, site, function() {
-			console.log('TELNET START');
-			telnetConn = true;
-		});
+		telnetConnect(site);
 	} else {
 		if (mainWindow && currentData) {
 			mainWindow.webContents.send('data', currentData);
@@ -70,9 +88,5 @@ app.on('ready', function() {
 		mainWindow = null;
 	});
 
-	telnet.on('data', function(data) {
-		currentData = data;
-		mainWindow.webContents.send('data', data);
-	});
 	//mainWindow.toggleDevTools();
 });

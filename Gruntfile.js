@@ -1,7 +1,7 @@
 module.exports = function(grunt) {
 	require('load-grunt-tasks')(grunt);
 	const project_name = 'Plasmon'
-	const electron_version = '0.30.2';
+	const electron_version = '0.30.4';
 	const is_development = process.argv[2] !== 'build';
 	grunt.initConfig({
 		browserSync: {
@@ -39,6 +39,12 @@ module.exports = function(grunt) {
 					src: ['index.html', 'script.js', 'main.js', 'package.json'],
 					dest: 'build/app/'
 				}]
+			},
+			osx: {
+				files: [{
+					src: 'logo.icns',
+					dest: 'build/<%= project_name %>-darwin-x64/<%= project_name %>.app/Contents/Resources/atom.icns'
+				}]
 			}
 		},
 		electron: {
@@ -69,5 +75,5 @@ module.exports = function(grunt) {
 		}
 	});
 	grunt.registerTask('default', ['browserify', 'browserSync']);
-	grunt.registerTask('build', ['browserify', 'copy', 'electron']);
+	grunt.registerTask('build', ['browserify', 'copy:main', 'electron', 'copy:osx']);
 }
